@@ -1,7 +1,7 @@
 # PubSub gRPC микросервис
 Приложение проверено в Postman и написаны unit-тесты для пакета subpub. Реализован Graceful Shutdown.
 
-- Конфигурация через yaml файл
+- Конфигурация через переменные окружения
 - Оптимизированный Docker образ
 
 ## Инструкция по запуску 
@@ -27,7 +27,6 @@ docker run -p 5000:5000 pubsub
 ├── cmd
 │   └── main
 │       └── main.go
-├── config.yaml                # Конфиг файл
 ├── Dockerfile 
 ├── go.mod
 ├── go.sum
@@ -35,7 +34,7 @@ docker run -p 5000:5000 pubsub
 │   ├── app
 │   │   └── app.go              # Объявление и методы для работы с App
 │   ├── config
-│   │   └── config.go           # Работа с config.yaml файлом
+│   │   └── config.go           # Работа с переменными окружения
 │   └── server
 │       └── server.go           # Реализация интерфейса сервера gRPC
 └── pkg
