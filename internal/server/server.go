@@ -29,6 +29,7 @@ func (s Server) Subscribe(req *pb.SubscribeRequest, stream grpc.ServerStreamingS
 	}()
 
 	var err error
+	log.Println("New subscription")
 	sub, err = s.Subpub.Subscribe(req.Key, func(msg any) {
 		select {
 		case <-ctx.Done():
@@ -42,6 +43,7 @@ func (s Server) Subscribe(req *pb.SubscribeRequest, stream grpc.ServerStreamingS
 				}); err != nil {
 					log.Printf("failed to send message: %v", err)
 				}
+				log.Println("New message sended")
 			}
 		}
 	})
@@ -59,6 +61,7 @@ func (s Server) Subscribe(req *pb.SubscribeRequest, stream grpc.ServerStreamingS
 }
 
 func (s Server) Publish(ctx context.Context, req *pb.PublishRequest) (*emptypb.Empty, error) {
+	log.Println("New message published")
 	if err := s.Subpub.Publish(req.Key, req.Data); err != nil {
 		return nil, status.Errorf(codes.Internal, "publish failed: %v", err)
 	}

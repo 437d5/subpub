@@ -15,12 +15,14 @@ import (
 
 func main() {
 	cfg := config.Load()
+	log.Println("Config loaded")
 	bus := subpub.NewSubPubImpl()
-
+	log.Println("New bus system initialized")
 	app := app.New(cfg, bus)
 	errChan := make(chan error, 1)
 
 	go func() {
+		log.Println("Starting new application")
 		if err := app.Run(); err != nil {
 			errChan <- err
 		}
