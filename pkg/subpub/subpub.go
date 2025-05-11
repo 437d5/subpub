@@ -122,17 +122,19 @@ func (s *SubPubImpl) Publish(subject string, msg any) error {
 
 func (s *SubPubImpl) Close(ctx context.Context) error {
 	s.mu.Lock()
+	defer s.mu.Unlock()
 	if s.Closed {
-		s.mu.Unlock()
 		return nil
 	}
+	defer func() {
+		s.Closed = true
+	}()
 
 	for _, subs := range s.Subscribers {
 		for _, sub := range subs {
-			close(sub.MsgChan)
+			sub.CancelContext()
 		}
 	}
-	s.mu.Unlock()
 
 	done := make(chan struct{})
 	go func() {
@@ -160,7 +162,7 @@ func (sub *SubscriptionInstance) Unsubscribe() {
 
 	for i, inst := range subs {
 		if inst == sub {
-			bus.Subscribers[sub.Subject] = slices.Delete(subs, i, i)
+			bus.Subscribers[sub.Subject] = slices.Delete(subs, i, i+1)
 			break
 		}
 	}
