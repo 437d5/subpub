@@ -11,9 +11,10 @@ FROM alpine:3.21
 
 WORKDIR /app
 
-COPY --from=builder /app/config.yaml .
 COPY --from=builder /app/server .
 
-EXPOSE 5000
+ENV GRPC_PORT=5000
+
+EXPOSE ${GRPC_PORT}
 
 CMD [ "./server" ]
